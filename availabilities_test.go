@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"testing"
+	"time"
+
+	"github.com/brensch/recreation"
+	"go.uber.org/zap"
 )
 
 func TestSelectRandomIDs(t *testing.T) {
@@ -51,4 +55,52 @@ func TestGetGroundIDsToScrape(t *testing.T) {
 	}
 
 	t.Log(ids)
+}
+
+func TestCheckForAvailabilityChange(t *testing.T) {
+
+	ctx := context.Background()
+	// TODO: use a local firestore instance for this
+	fs, err := InitFirestore(ctx)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer fs.Close()
+
+	log, _ := zap.NewProduction()
+	rec := recreation.InitServer(ctx, log, 0)
+
+	newAvailabilities, deltas, err := CheckForAvailabilityChange(ctx, rec, fs, time.Now(), "232784")
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	// TODO: since this is an integration test with firebase need to figure out what to expect
+	t.Log(newAvailabilities, deltas)
+}
+
+func TestDoAvailabilitiesSync(t *testing.T) {
+
+	ctx := context.Background()
+	// TODO: use a local firestore instance for this
+	fs, err := InitFirestore(ctx)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer fs.Close()
+
+	log, _ := zap.NewProduction()
+	rec := recreation.InitServer(ctx, log, 0)
+
+	err = DoAvailabilitiesSync(ctx, log, rec, fs, time.Now())
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	// TODO: since this is an integration test with firebase need to figure out what to expect
+
 }

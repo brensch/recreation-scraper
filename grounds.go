@@ -15,8 +15,8 @@ var (
 	DocGroundsSummary        = "grounds_summary"
 )
 
-func ScrapeGrounds(ctx context.Context, client *recreation.Obfuscator) (recreation.SearchResults, error) {
-	return recreation.DoSearchGeo(ctx, client, 37.3859, -122.0882)
+func ScrapeGrounds(ctx context.Context, rec *recreation.Server) (recreation.SearchResults, error) {
+	return rec.SearchGeo(ctx, 37.3859, -122.0882)
 }
 
 func UpdateGrounds(ctx context.Context, fs *firestore.Client, grounds []recreation.CampGround) error {
@@ -62,9 +62,9 @@ func UpdateGroundsSummary(ctx context.Context, fs *firestore.Client, grounds []r
 }
 
 // DoGroundsSync does the full routine of scraping from the website, syncing detailed data, then updating summary
-func DoGroundsSync(ctx context.Context, client *recreation.Obfuscator, fs *firestore.Client) error {
+func DoGroundsSync(ctx context.Context, rec *recreation.Server, fs *firestore.Client) error {
 
-	res, err := ScrapeGrounds(ctx, client)
+	res, err := ScrapeGrounds(ctx, rec)
 	if err != nil {
 		return err
 	}

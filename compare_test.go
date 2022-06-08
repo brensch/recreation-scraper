@@ -46,7 +46,7 @@ func TestCompareCampgroundStates(t *testing.T) {
 		},
 	}
 
-	delta, err := FindCampsiteDeltas(old, new)
+	delta, err := FindAvailabilityDeltas(old, new)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -96,6 +96,6 @@ func BenchmarkCompareCampgroundStates(b *testing.B) {
 	}
 
 	for i := 0; i < b.N; i++ {
-		FindCampsiteDeltas(old, new)
+		FindAvailabilityDeltas(old, new)
 	}
 }

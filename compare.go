@@ -7,13 +7,19 @@ import (
 )
 
 type CampsiteDelta struct {
-	SiteID   string
-	OldState string
-	NewState string
-	Date     time.Time
+	SiteID       string
+	OldState     string
+	NewState     string
+	DateAffected time.Time
 }
 
-func FindCampsiteDeltas(oldGround, newGround recreation.Availability) ([]CampsiteDelta, error) {
+type CheckDelta struct {
+	// GroundID  string
+	Deltas    []CampsiteDelta
+	CheckTime time.Time
+}
+
+func FindAvailabilityDeltas(oldGround, newGround recreation.Availability) ([]CampsiteDelta, error) {
 
 	var deltas []CampsiteDelta
 
@@ -34,10 +40,10 @@ func FindCampsiteDeltas(oldGround, newGround recreation.Availability) ([]Campsit
 			}
 
 			deltas = append(deltas, CampsiteDelta{
-				SiteID:   siteID,
-				OldState: oldSite.Availabilities[dateString],
-				NewState: availability,
-				Date:     date,
+				SiteID:       siteID,
+				OldState:     oldSite.Availabilities[dateString],
+				NewState:     availability,
+				DateAffected: date,
 			})
 		}
 

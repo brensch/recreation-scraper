@@ -6,14 +6,16 @@ import (
 	"testing"
 
 	"github.com/brensch/recreation"
+	"go.uber.org/zap"
 )
 
 func TestScrapeGrounds(t *testing.T) {
 
 	ctx := context.Background()
-	client := recreation.InitObfuscator(ctx)
+	log, _ := zap.NewProduction()
+	rec := recreation.InitServer(ctx, log, 0)
 
-	grounds, err := ScrapeGrounds(ctx, client)
+	grounds, err := ScrapeGrounds(ctx, rec)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -71,12 +73,6 @@ func TestInitGroundsSummary(t *testing.T) {
 		t.FailNow()
 	}
 
-	// // check the collection exists
-	// snap, err := fs.Collection(CollectionGroundsSummary).Doc(DocGroundsSummary).Get(ctx)
-	// if err != nil {
-	// 	t.Log(err)
-	// 	t.FailNow()
-	// }
 }
 
 func TestUpdateGroundsSummary(t *testing.T) {
